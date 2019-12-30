@@ -8,13 +8,17 @@ __file_settings(file)__: Takes an array associated with a file name keyword from
 
 __print_stats(data)__: This produces an abridged version of the file_settings function above, with the same input. It makes the assumption that the settings were not changed during the recording session.
 
-__data_slices(data,\*args)__: Returns the scan mode as the first output and an array of extracted data with irrelevant information discarded as the second output. The mode will be an integer (this is how it is stored n the original data) to be understood as follows: Stop/Sidescan (0), Sector Scan (1), Flyback (2), Rotate (3). The data slices array is a list of lists with each list starting with the angle at the current time step followed by the intensities of the responses from the area closest to the scanner up until the full range. The data portion will be of length 400 at all scan speeds except for Super Fast where it is 200.
+__data_slices(data,\*args)__: Returns the scan mode as the first output and an array of extracted data with irrelevant information discarded as the second output. The mode will be an integer (this is how it is stored n the original data) to be understood as follows: Stop/Sidescan (0), Sector Scan (1), Flyback (2), Rotate (3). The data slices array is a list of lists with each list starting with the angle at the current time step followed by the intensities of the responses from the area closest to the scanner up until the full range. The data portion will be of length 400 at all scan speeds except for Super Fast where it is 200. If the mode of scanning schanges during the recording, an error message will occur.
 
-__preprocess_data_slices(data_slices,\*args)__: 
+__preprocess_data_slices(data_slices,\*args)__: This takes the data slices array and performs minor preprocessing. Where the angle of two or more consequetive readings is the same, it will merge these together to create one single list of intensities for that angle. In the replay using the Sonavision software, the data is rewritten over the same position during the animation. It is the assumption that comining these readings will reduce noise in that portion of the scan. 
 
-__forb(a,b,jump)__:
+_NB: This cannot be applied to Stop mode as it would combine all entries to one single data slice as, by definitiion, the angle is constant. To extract images from this type of data, a different strategy is used._
 
-__block_extractor(data_slices,mode)__:
+__extract_angles(data_slices)__: A helper function that just returns a list of all the angles for each data slice. Used to check upper and lower limits etc in other functions.
+
+__forb(a,b)__: This determines whether the scanner is moving forward of backwards. Note that the processed data slices should never have any consequetive slices recorded at the same angle if they are preprocessed using the function described earlier. The necessity for this function is centred around the fact that angles are stored in base 1024. A jump from 1022 to 4 is thus in the forward direction and if the scanner crosses the zero angle at any time, adjustments for the direction need to be made. A forward jump (clockwise) outputs 1 and a backward jump (anticlockwise) outputs -1. No change results in 0. By default, forward direction is the direction of the shortest path round the circle from a to b. 
+
+__block_extractor(data_slices,mode,\*args,\*\*kwargs)__: This function will divide the scan up into blocks in the in
 
 __flip_merge(test ?)__:
 
