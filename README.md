@@ -18,9 +18,9 @@ __extract_angles(data_slices)__: A helper function that just returns a list of a
 
 __forb(a,b)__: This determines whether the scanner is moving forward of backwards. Note that the processed data slices should never have any consequetive slices recorded at the same angle if they are preprocessed using the function described earlier. The necessity for this function is centred around the fact that angles are stored in base 1024. A jump from 1022 to 4 is thus in the forward direction and if the scanner crosses the zero angle at any time, adjustments for the direction need to be made. A forward jump (clockwise) outputs 1 and a backward jump (anticlockwise) outputs -1. No change results in 0. By default, forward direction is the direction of the shortest path round the circle from a to b. 
 
-__block_extractor(data_slices,mode,\*args,\*\*kwargs)__: This function will divide the scan up into blocks in the in
+__block_extractor(data_slices,mode,\*args,\*\*kwargs)__: This function will divide the scan up into blocks in a manner intuitive to the nature of the scan. For stop/side scan mode, it breaks up the scan into equal-sized chunks with a designated overlap defined a an intger number of pixels by an optional "overlap" keyword argument. For scan sector mode, the blocks are determined by the limits of the sector defined by the change in direction of the scan. For flyback, the blacks have the same limits but with new blocks determined by detecting a jump to the start of the sector. Finally, in rotation mode, the blocks are determined by the start position of the scan and a new block started after 360 degrees have passed. An optional keyword argument "parts" will split the scan into an integer number of sectors. This can be combined with the "overlap" keyword. The output is an list of blocks where each block is a list of lists.
 
-__flip_merge(test ?)__:
+__flip_merge(test ?)__: Even though the scanning procedure should be one-directional for the scan and flyback modes, the recorded values for the 
 
 __dir_in_b(a,b,base)__:
 
